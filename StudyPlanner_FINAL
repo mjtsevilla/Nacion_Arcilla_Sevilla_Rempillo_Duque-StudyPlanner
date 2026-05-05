@@ -1,0 +1,130 @@
+TASKS = []
+
+# FUNCTIONS
+
+def main_menu():
+    print("\n===== MAIN MENU =====")
+    print("1. Add Task")
+    print("2. Display Tasks")
+    print("3. Edit Task")
+    print("0. Exit")
+    return input("Choice: ")
+
+def get_tasks():
+    def get_valid_input(n):
+        while True:
+            no_of_tasks = input(n).strip()
+            if no_of_tasks.lstrip('-').isdigit():
+                return int(no_of_tasks)
+            else:
+                print("Invalid choice. Please enter a valid integer.")
+    
+    n = get_valid_input("How many tasks? ")
+
+    for i in range(n):
+        name = input("Task name: ")
+        def get_valid_deadline(deadline):
+            while True:
+                no_of_days = input(deadline).strip()
+                if no_of_days.lstrip('-').isdigit():
+                    return int(no_of_days)
+                else:
+                    print("Invalid choice. Please enter a valid integer.")
+    
+        deadline = get_valid_deadline("Deadline (days): ")
+        def get_valid_difficulty(difficulty):
+            while True:
+                level_of_difficulty = input(difficulty).strip()
+                if level_of_difficulty.lstrip('-').isdigit():
+                    return int(level_of_difficulty)
+                else:
+                    print("Invalid choice. Please enter a valid integer.")
+    
+        difficulty = get_valid_difficulty("Difficulty: ")
+
+        TASKS.append([name, deadline, difficulty, 0])
+
+
+def compute_priority():
+    for task in TASKS:
+        deadline = task[1]
+        difficulty = task[2]
+        task[3] = difficulty / (deadline + 1)
+
+
+def sort_tasks():
+    n = len(TASKS)
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            if TASKS[j][3] < TASKS[j + 1][3]:
+                temp = TASKS[j]
+                TASKS[j] = TASKS[j + 1]
+                TASKS[j + 1] = temp
+
+
+def display_tasks():
+    print("\n--- TASK LIST ---")
+    for task in TASKS:
+        print("Name:", task[0])
+        print("Deadline:", task[1])
+        print("Difficulty:", task[2])
+        print("Priority:", round(task[3], 2))
+        print("-----------------")
+
+
+def edit_task():
+    name = input("Enter task name to edit: ")
+
+    for task in TASKS:
+        if task[0] == name:
+            def get_new_deadline(deadline):
+                while True:
+                    new_deadline = input(deadline).strip()
+                    if new_deadline.lstrip('-').isdigit():
+                        return int(new_deadline)
+                    else:
+                        print("Invalid choice. Please enter a valid integer.")
+
+            deadline = get_new_deadline("New deadline: ")
+            task[1] = deadline
+            def get_new_difficulty(difficulty):
+                while True:
+                    new_difficulty = input(difficulty).strip()
+                    if new_difficulty.lstrip('-').isdigit():
+                        return int(new_difficulty)
+                    else:
+                        print("Invalid choice. Please enter a valid integer.")
+    
+            difficulty = get_new_difficulty("New difficulty: ")
+            task[2] = difficulty
+            print("Task updated!")
+            return
+        else:
+            print("Task not found!")
+
+
+# MAIN PROGRAM
+
+while True:
+    choice = main_menu()
+
+    if choice == "1":
+        get_tasks()
+        compute_priority()
+        sort_tasks()
+
+    elif choice == "2":
+        display_tasks()
+
+    elif choice == "3":
+        edit_task()
+        compute_priority()
+        sort_tasks()
+
+    elif choice == "0":
+        print("Bye! Study well, iskolar!")
+        break
+
+    else:
+        print("Invalid choice. Please enter a valid input.")
+
